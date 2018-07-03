@@ -67,6 +67,9 @@ __Table of Contents__
 
 ## Arity
 
+[元数](https://en.wikipedia.org/wiki/Arity):
+函数接受的参数的个数
+
 The number of arguments a function takes. From words like unary, binary, ternary, etc. This word has the distinction of being composed of two suffixes, "-ary" and "-ity." Addition, for example, takes two arguments, and so it is defined as a binary function or a function with an arity of two. Such a function may sometimes be called "dyadic" by people who prefer Greek roots to Latin. Likewise, a function that takes a variable number of arguments is called "variadic," whereas a binary function must be given two and only two arguments, currying and partial application notwithstanding (see below).
 
 ```js
@@ -79,6 +82,9 @@ console.log(arity) // 2
 ```
 
 ## Higher-Order Functions (HOF)
+
+[高阶函数](https://en.wikipedia.org/wiki/Higher-order_function):
+接受函数作为参数, 或返回值是函数的函数
 
 A function which takes a function as an argument and/or returns a function.
 
@@ -95,6 +101,9 @@ filter(is(Number), [0, '1', 2, null]) // [0, 2]
 ```
 
 ## Closure
+
+[闭包](https://en.wikipedia.org/wiki/Closure_(computer_programming)):
+一个作用域, 保留着函数创建时可见的变量
 
 A closure is a scope which retains variables available to a function when it's created. This is important for
 [partial application](#partial-application) to work.
@@ -133,6 +142,9 @@ __Further reading__
 
 ## Partial Application
 
+[部分应用](https://en.wikipedia.org/wiki/Partial_application):
+为原函数创建一个新函数, 指定部分参数
+
 Partially applying a function means creating a new function by pre-filling some of the arguments to the original function.
 
 
@@ -165,6 +177,9 @@ Partial application helps create simpler functions from more complex ones by bak
 
 ## Currying
 
+[柯里化](https://en.wikipedia.org/wiki/Currying):
+将接受多个参数的函数, 转化为接受单个参数的函数
+
 The process of converting a function that takes multiple arguments into a function that takes them one at a time.
 
 Each time the function is called it only accepts one argument and returns a function that takes one argument until all arguments are passed.
@@ -183,6 +198,10 @@ add2(10) // 12
 ```
 
 ## Auto Currying
+
+[自动柯里化]():
+将接受多个参数的函数, 转化为接受单个参数的函数, 若给的参数个数不够, 则转化为接受剩余参数的函数
+
 Transforming a function that takes multiple arguments into one that if given less than its correct number of arguments returns a function that takes the rest. When the function gets the correct number of arguments it is then evaluated.
 
 lodash & Ramda have a `curry` function that works this way.
@@ -202,6 +221,9 @@ __Further reading__
 
 ## Function Composition
 
+[函数组合](https://en.wikipedia.org/wiki/Function_composition_(computer_science)):
+将两个函数, 其中一个的输出作为另一个的输入, 组合为一个新函数
+
 The act of putting two functions together to form a third function where the output of one function is the input of the other.
 
 ```js
@@ -211,6 +233,9 @@ floorAndToString(121.212121) // '121'
 ```
 
 ## Continuation
+
+[Continuation](https://en.wikipedia.org/wiki/Continuation):
+某时刻, 有待执行的一部分代码
 
 At any given point in a program, the part of the code that's yet to be executed is known as a continuation.
 
@@ -242,6 +267,9 @@ readFileAsync('path/to/file', (err, response) => {
 ```
 
 ## Purity
+
+[纯度](https://en.wikipedia.org/wiki/Pure_function):
+若函数的返回值仅取决于输入值, 不产生副作用, 则称为纯函数
 
 A function is pure if the return value is only determined by its
 input values, and does not produce side effects.
@@ -279,6 +307,9 @@ greeting // "Hi, Brianne"
 
 ## Side effects
 
+[副作用](https://en.wikipedia.org/wiki/Side_effect_(computer_science)):
+一个函数或表达式, 除返回值之外, 与外部可变状态产生了交互, 则称其有副作用
+
 A function or expression is said to have a side effect if apart from returning a value, it interacts with (reads from or writes to) external mutable state.
 
 ```js
@@ -290,6 +321,9 @@ console.log('IO is a side effect!')
 ```
 
 ## Idempotent
+
+[幂等](https://en.wikipedia.org/wiki/Idempotence#Computer_science_meaning):
+一个函数, 若将其结果作为输入, 结果不变, 则称之为幂等的
 
 A function is idempotent if reapplying it to its result does not produce a different result.
 
@@ -306,6 +340,9 @@ sort(sort(sort([2, 1])))
 ```
 
 ## Point-Free Style
+
+[Point-Free Style](https://en.wikipedia.org/wiki/Tacit_programming):
+不显式指定函数参数的风格
 
 Writing functions where the definition does not explicitly identify the arguments used. This style usually requires [currying](#currying) or other [Higher-Order functions](#higher-order-functions-hof). A.K.A Tacit programming.
 
@@ -328,6 +365,10 @@ const incrementAll2 = map(add(1))
 Points-free function definitions look just like normal assignments without `function` or `=>`.
 
 ## Predicate
+
+[谓词](https://en.wikipedia.org/wiki/Predicate_(mathematical_logic))
+一个函数, 对于给定的参数, 返回相应的 true 或 false
+
 A predicate is a function that returns true or false for a given value. A common use of a predicate is as the callback for array filter.
 
 ```js
@@ -337,6 +378,9 @@ const predicate = (a) => a > 2
 ```
 
 ## Contracts
+
+[契约]():
+约定某种表现
 
 A contract specifies the obligations and guarantees of the behavior from a function or expression at runtime. This acts as a set of rules that are expected from the input and output of a function or expression, and errors are generally reported whenever a contract is violated.
 
@@ -354,6 +398,9 @@ addOne('some string') // Contract violated: expected int -> int
 ```
 
 ## Category
+
+[范畴](https://en.wikipedia.org/wiki/Category_(mathematics)):
+(范畴论)对象和其态射的集合
 
 A category in category theory is a collection of objects and morphisms between them. In programming, typically types
 act as the objects and functions as morphisms.
@@ -378,6 +425,9 @@ __Further reading__
 
 ## Value
 
+[值](https://en.wikipedia.org/wiki/Value_(computer_science)):
+任何可以赋给变量的东西
+
 Anything that can be assigned to a variable.
 
 ```js
@@ -389,6 +439,9 @@ undefined
 ```
 
 ## Constant
+
+[常量](https://en.wikipedia.org/wiki/Constant_(computer_programming)):
+不能再赋值的变量
 
 A variable that cannot be reassigned once defined.
 
@@ -406,6 +459,9 @@ john.age + five === ({name: 'John', age: 30}).age + (5)
 ```
 
 ## Functor
+
+[函子]():
+一个对象, 实现了 `map` 方法
 
 An object that implements a `map` function which, while running over each value in the object to produce a new object, adheres to two rules:
 
@@ -439,6 +495,10 @@ const g = x => x * 2
 ```
 
 ## Pointed Functor
+
+[Pointed Functor]():
+一个函子, 实现了 `of` 方法
+
 An object with an `of` function that puts _any_ single value into it.
 
 ES2015 adds `Array.of` making arrays a pointed functor.
@@ -448,6 +508,9 @@ Array.of(1) // [1]
 ```
 
 ## Lift
+
+[提升](https://en.wikipedia.org/wiki/Lift_(mathematics)):
+将一个值置入一个函子这类对象
 
 Lifting is when you take a value and put it into an object like a [functor](#pointed-functor). If you lift a function into an [Applicative Functor](#applicative-functor) then you can make it work on values that are also in that functor.
 
@@ -476,6 +539,9 @@ lift(increment)([2]) // [3]
 
 ## Referential Transparency
 
+[引用透明性](https://en.wikipedia.org/wiki/Referential_transparency):
+一个表达式, 可以替换为其值, 而不用更改程序的行为, 称为引用透明的
+
 An expression that can be replaced with its value without changing the
 behavior of the program is said to be referentially transparent.
 
@@ -489,6 +555,9 @@ Any invocation of `greet()` can be replaced with `Hello World!` hence greet is
 referentially transparent.
 
 ##  Equational Reasoning
+
+[等值推理](https://en.wikipedia.org/wiki/Universal_algebra):
+若一个程序是表达式的组合, 且没有副作用, 则系统的真假可由其一部分得出
 
 When an application is composed of expressions and devoid of side effects, truths about the system can be derived from the parts.
 
