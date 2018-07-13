@@ -563,6 +563,9 @@ When an application is composed of expressions and devoid of side effects, truth
 
 ## Lambda
 
+[拉姆达](https://en.wikipedia.org/wiki/Anonymous_function):
+匿名函数, 可以当作值
+
 An anonymous function that can be treated like a value.
 
 ```js
@@ -585,9 +588,16 @@ const add1 = (a) => a + 1
 ```
 
 ## Lambda Calculus
+
+[拉姆达演算](https://en.wikipedia.org/wiki/Lambda_calculus):
+数理逻辑中的一个形式系统, 基于函数抽象和使用变量绑定和替换的应用
+
 A branch of mathematics that uses functions to create a [universal model of computation](https://en.wikipedia.org/wiki/Lambda_calculus).
 
 ## Lazy evaluation
+
+[惰性求值](https://en.wikipedia.org/wiki/Lazy_evaluation):
+一种按需调用求值机制, 将表达式求值延迟到需要其值时
 
 Lazy evaluation is a call-by-need evaluation mechanism that delays the evaluation of an expression until its value is needed. In functional languages, this allows for structures like infinite lists, which would not normally be available in an imperative language where the sequencing of commands is significant.
 
@@ -606,21 +616,35 @@ randIter.next() // Each execution gives a random value, expression is evaluated 
 
 ## Monoid
 
+[幺半群](https://en.wikipedia.org/wiki/Monoid):
+一个对象, 带一个函数, 该函数可以"结合"该对象与另一个同类对象
+
 An object with a function that "combines" that object with another of the same type.
+
+一个简单的幺半群, 数的相加:
 
 One simple monoid is the addition of numbers:
 
 ```js
 1 + 1 // 2
 ```
+
+此例中, 数是对象, `+` 是函数
+
 In this case number is the object and `+` is the function.
 
+( 幺元, 单位元 Identity )必须存在一个 "幺元" 值, 当结合其它值时, 不会改变那些值
+
 An "identity" value must also exist that when combined with a value doesn't change it.
+
+对于相加来说, 幺元值为 `0`
 
 The identity value for addition is `0`.
 ```js
 1 + 0 // 1
 ```
+
+( 结合律 Associativity ) 操作分组必须不影响结果:
 
 It's also required that the grouping of operations will not affect the result (associativity):
 
@@ -628,11 +652,15 @@ It's also required that the grouping of operations will not affect the result (a
 1 + (2 + 3) === (1 + 2) + 3 // true
 ```
 
+数组连接也形成一个幺半群:
+
 Array concatenation also forms a monoid:
 
 ```js
 ;[1, 2].concat([3, 4]) // [1, 2, 3, 4]
 ```
+
+其幺元值为空数组 `[]`
 
 The identity value is empty array `[]`
 
@@ -640,18 +668,30 @@ The identity value is empty array `[]`
 ;[1, 2].concat([]) // [1, 2]
 ```
 
+若提供幺元和组合函数, 则函数自身形成一个幺半群:
+
 If identity and compose functions are provided, functions themselves form a monoid:
 
 ```js
 const identity = (a) => a
 const compose = (f, g) => (x) => f(g(x))
 ```
+
+`foo` 是接受一个参数的任意函数
+
 `foo` is any function that takes one argument.
+
 ```
 compose(foo, identity) ≍ compose(identity, foo) ≍ foo
 ```
 
 ## Monad
+
+~~Monad 说白了不过就是自函子范畴上的一个幺半群~~
+
+[单子](https://en.wikipedia.org/wiki/Monad_(functional_programming)):
+一个对象, 带 [`of`](#pointed-functor) 和 `chain` 函数. 
+`chain` 类似 [`map`](#functor), 除了它会为嵌套对象结果解除嵌套
 
 A monad is an object with [`of`](#pointed-functor) and `chain` functions. `chain` is like [`map`](#functor) except it un-nests the resulting nested object.
 
@@ -668,10 +708,16 @@ Array.of('cat,dog', 'fish,bird').chain((a) => a.split(',')) // ['cat', 'dog', 'f
 Array.of('cat,dog', 'fish,bird').map((a) => a.split(',')) // [['cat', 'dog'], ['fish', 'bird']]
 ```
 
+在其它函数式语言中, `of` 也称为 `return`.
+在其它语言中, `chain` 也称为 `flatmap` 和 `bind`
+
 `of` is also known as `return` in other functional languages.
 `chain` is also known as `flatmap` and `bind` in other languages.
 
 ## Comonad
+
+[余单子](https://en.wikipedia.org/wiki/Monad_(functional_programming)#Comonads):
+一个对象, 有 `extract` 和 `extend` 函数
 
 An object that has `extract` and `extend` functions.
 
@@ -687,11 +733,15 @@ const CoIdentity = (v) => ({
 })
 ```
 
+`extract` 从函子中提取一个值
+
 Extract takes a value out of a functor.
 
 ```js
 CoIdentity(1).extract() // 1
 ```
+
+`extend` 在余单子上跑一个函数. 该函数返回类型应与余单子相同
 
 Extend runs a function on the comonad. The function should return the same type as the comonad.
 
@@ -701,30 +751,37 @@ CoIdentity(1).extend((co) => co.extract() + 1) // CoIdentity(2)
 
 ## Applicative Functor
 
+[可应用函子](https://en.wikipedia.org/wiki/Applicative_functor):
+一个对象, 带 `ap` 函数. `ap` 把一个对象中的函数应用到另一同类对象中的值
+
 An applicative functor is an object with an `ap` function. `ap` applies a function in the object to a value in another object of the same type.
 
 ```js
-// Implementation
+// 实现
 Array.prototype.ap = function (xs) {
   return this.reduce((acc, f) => acc.concat(xs.map(f)), [])
 }
 
-// Example usage
+// 用法示例
 ;[(a) => a + 1].ap([1]) // [2]
 ```
+
+其作用体现在, 若有两个对象, 想要应用一个二元函数到它们的内容
 
 This is useful if you have two objects and you want to apply a binary function to their contents.
 
 ```js
-// Arrays that you want to combine
+// 想要组合的数组
 const arg1 = [1, 3]
 const arg2 = [4, 5]
 
-// combining function - must be curried for this to work
+// 组合函数, 这里必须柯里化才能用
 const add = (x) => (y) => x + y
 
 const partiallyAppliedAdds = [add].ap(arg1) // [(y) => 1 + y, (y) => 3 + y]
 ```
+
+产生了一个函数数组, 可以在之上调用 `ap` 得到结果:
 
 This gives you an array of functions that you can call `ap` on to get the result:
 
@@ -734,9 +791,15 @@ partiallyAppliedAdds.ap(arg2) // [5, 6, 7, 8]
 
 ## Morphism
 
+[态射](https://en.wikipedia.org/wiki/Morphism):
+一个转化函数
+
 A transformation function.
 
 ### Endomorphism
+
+[自同态](https://en.wikipedia.org/wiki/Endomorphism):
+一个函数, 其输入类型与输出类型相同
 
 A function where the input type is the same as the output.
 
@@ -750,26 +813,32 @@ const decrement = (x) => x - 1
 
 ### Isomorphism
 
+[同构](https://en.wikipedia.org/wiki/Isomorphism):
+两类对象之间的一对转化, 结构不变, 数据无损
+
 A pair of transformations between 2 types of objects that is structural in nature and no data is lost.
+
+例如, 2D 坐标可存储为数组 `[2,3]` 或对象 `{x: 2, y: 3}`
 
 For example, 2D coordinates could be stored as an array `[2,3]` or object `{x: 2, y: 3}`.
 
 ```js
-// Providing functions to convert in both directions makes them isomorphic.
+// 提供双向转换函数使它们成为同构的 (isomorphic)
 const pairToCoords = (pair) => ({x: pair[0], y: pair[1]})
-
 const coordsToPair = (coords) => [coords.x, coords.y]
 
 coordsToPair(pairToCoords([1, 2])) // [1, 2]
-
 pairToCoords(coordsToPair({x: 1, y: 2})) // {x: 1, y: 2}
 ```
 
-
-
 ## Setoid
 
+[Setoid](https://en.wikipedia.org/wiki/Setoid):
+一个带 `equals` 函数的对象, `equals` 用于和其它同类对象比较
+
 An object that has an `equals` function which can be used to compare other objects of the same type.
+
+让数组成为 setoid:
 
 Make array a setoid:
 
@@ -793,6 +862,9 @@ Array.prototype.equals = function (arr) {
 
 ## Semigroup
 
+[半群](https://en.wikipedia.org/wiki/Semigroup):
+一个带 `concat` 函数的对象, `concat` 可将该对象与另一同类型对象组合
+
 An object that has a `concat` function that combines it with another object of the same type.
 
 ```js
@@ -800,6 +872,9 @@ An object that has a `concat` function that combines it with another object of t
 ```
 
 ## Foldable
+
+[可折叠](https://en.wikipedia.org/wiki/Fold_(higher-order_function)):
+一个带 `reduce` 函数的对象, `reduce` 可将该对象转化为其它类型
 
 An object that has a `reduce` function that can transform that object into some other type.
 
@@ -809,11 +884,14 @@ sum([1, 2, 3]) // 6
 ```
 
 ## Lens ##
-A lens is a structure (often an object or function) that pairs a getter and a non-mutating setter for some other data
-structure.
+
+[透镜]():
+一个结构 (通常是一个对象或函数), 有一对 getter 和不可变 setter 用于其它数据结构
+
+A lens is a structure (often an object or function) that pairs a getter and a non-mutating setter for some other data structure.
 
 ```js
-// Using [Ramda's lens](http://ramdajs.com/docs/#lens)
+// 用到 [Ramda 的透镜](http://ramdajs.com/docs/#lens)
 const nameLens = R.lens(
   // getter for name property on an object
   (obj) => obj.name,
@@ -822,20 +900,23 @@ const nameLens = R.lens(
 )
 ```
 
+一个数据结构有了这一对 get 和 set, 就有了一些关键特性
 Having the pair of get and set for a given data structure enables a few key features.
 
 ```js
 const person = {name: 'Gertrude Blanch'}
 
-// invoke the getter
+// 调用 getter
 R.view(nameLens, person) // 'Gertrude Blanch'
 
-// invoke the setter
+// 调用 setter
 R.set(nameLens, 'Shafi Goldwasser', person) // {name: 'Shafi Goldwasser'}
 
-// run a function on the value in the structure
+// 在结构的值上跑一个函数
 R.over(nameLens, uppercase, person) // {name: 'GERTRUDE BLANCH'}
 ```
+
+透镜也是可组合的. 这简化了嵌套数据的深度不可变更新
 
 Lenses are also composable. This allows easy immutable updates to deeply nested data.
 
@@ -854,13 +935,19 @@ const people = [{name: 'Gertrude Blanch'}, {name: 'Shafi Goldwasser'}]
 R.over(compose(firstLens, nameLens), uppercase, people) // [{'name': 'GERTRUDE BLANCH'}, {'name': 'Shafi Goldwasser'}]
 ```
 
-Other implementations:
+其它实现:
+
 * [partial.lenses](https://github.com/calmm-js/partial.lenses) - Tasty syntax sugar and a lot of powerful features
 * [nanoscope](http://www.kovach.me/nanoscope/) - Fluent-interface
 
 ## Type Signatures
 
+[类型签名](https://en.wikipedia.org/wiki/Type_signature):
+通常 JavaScript 中的函数有注释说明其参数和返回值的类型.
+
 Often functions in JavaScript will include comments that indicate the types of their arguments and return values.
+
+社区虽不一致, 但常用如下模式:
 
 There's quite a bit of variance across the community but they often follow the following patterns:
 
@@ -874,12 +961,20 @@ const add = (x) => (y) => x + y
 const increment = (x) => x + 1
 ```
 
+若函数接受另一函数作为参数, 则另一函数放在括号里
+
 If a function accepts another function as an argument it is wrapped in parentheses.
 
 ```js
 // call :: (a -> b) -> a -> b
 const call = (f) => (x) => f(x)
 ```
+
+字母 `a`, `b`, `c`, `d` 用于标示任意类型的参数.
+下例中的 `map` 接受:
+1. 一个把某类型 `a` 的值转化为另一类型 `b` 的函数
+2. 一个 `a` 类型值的数组
+并返回一个 `b` 类型值的数组
 
 The letters `a`, `b`, `c`, `d` are used to signify that the argument can be of any type. The following version of `map` takes a function that transforms a value of some type `a` into another type `b`, an array of values of type `a`, and returns an array of values of type `b`.
 
@@ -888,34 +983,44 @@ The letters `a`, `b`, `c`, `d` are used to signify that the argument can be of a
 const map = (f) => (list) => list.map(f)
 ```
 
-__Further reading__
-* [Ramda's type signatures](https://github.com/ramda/ramda/wiki/Type-Signatures)
+__延伸阅读__
+* [Ramda 的类型签名](https://github.com/ramda/ramda/wiki/Type-Signatures)
 * [Mostly Adequate Guide](https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch7.html#whats-your-type)
-* [What is Hindley-Milner?](http://stackoverflow.com/a/399392/22425) on Stack Overflow
+* Stack Overflow 上的 [What is Hindley-Milner?](http://stackoverflow.com/a/399392/22425)
 
 ## Algebraic data type
-A composite type made from putting other types together. Two common classes of algebraic types are [sum](#sum-type) and [product](#product-type).
+
+[代数数据类型](https://en.wikipedia.org/wiki/Algebraic_data_type):
+一个组合类型, 由其它类型组合而成.
+两个常见代数类型有 [和](#sum-type) 与 [积](#product-type)
 
 ### Sum type
-A Sum type is the combination of two types together into another one. It is called sum because the number of possible values in the result type is the sum of the input types.
 
-JavaScript doesn't have types like this but we can use `Set`s to pretend:
+[和类型](https://en.wikipedia.org/wiki/Tagged_union):
+两个类型的合二为一.
+因结果类型所有可能的值是输入类型所有可能的值之和, 故而称为和类型
+
+JavaScript 没有这种类型, 但可以用 `Set` 模拟:
+
 ```js
-// imagine that rather than sets here we have types that can only have these values
+// 设想忽略 Set, 这里有某些只能有这些值的类型
 const bools = new Set([true, false])
 const halfTrue = new Set(['half-true'])
 
-// The weakLogic type contains the sum of the values from bools and halfTrue
+// 该 weakLogic 类型包含 bools 和 halfTrue 的值之和
 const weakLogicValues = new Set([...bools, ...halfTrue])
 ```
 
-Sum types are sometimes called union types, discriminated unions, or tagged unions.
+Sum type 也称 tagged union, variant, variant record, choice type, discriminated union, disjoint union
 
-There's a [couple](https://github.com/paldepind/union-type) [libraries](https://github.com/puffnfresh/daggy) in JS which help with defining and using union types.
+有 [几个](https://github.com/paldepind/union-type) JS [库](https://github.com/puffnfresh/daggy) 可以帮助定义和使用 union type
 
-Flow includes [union types](https://flow.org/en/docs/types/unions/) and TypeScript has [Enums](https://www.typescriptlang.org/docs/handbook/enums.html) to serve the same role.
+_Flow_ 有 [union types](https://flow.org/en/docs/types/unions/), _TypeScript_ 有 [Enums](https://www.typescriptlang.org/docs/handbook/enums.html) 来干这个
 
 ### Product type
+
+[积类型](https://en.wikipedia.org/wiki/Product_type):
+将类型以如下形式组合, 我们都熟悉:
 
 A **product** type combines types together in a way you're probably more familiar with:
 
@@ -923,14 +1028,18 @@ A **product** type combines types together in a way you're probably more familia
 // point :: (Number, Number) -> {x: Number, y: Number}
 const point = (x, y) => ({ x, y })
 ```
-It's called a product because the total possible values of the data structure is the product of the different values. Many languages have a tuple type which is the simplest formulation of a product type.
 
-See also [Set theory](https://en.wikipedia.org/wiki/Set_theory).
+因结果类型所有可能的值是输入类型所有可能的值之积, 故而称为积类型
+很多语言的 tuple 类型即是一种简单的积类型
+
+参见 [Set theory](https://en.wikipedia.org/wiki/Set_theory).
 
 ## Option
-Option is a [sum type](#sum-type) with two cases often called `Some` and `None`.
 
-Option is useful for composing functions that might not return a value.
+[Option](https://en.wikipedia.org/wiki/Option_type):
+一个带 `Some` 和 `None` 的 [和类型](#sum-type)
+
+Option 可用于组合无返回值的函数
 
 ```js
 // Naive definition
